@@ -101,8 +101,8 @@ header .identity h1 {
 
 
 body {
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     font-family: calibri;
 }
 
@@ -121,7 +121,23 @@ main .content {
     bottom: 0;
     right: 0;
     left: 0;
-    padding: 0.5px;
+    padding: 0.1rem;
+}
+
+.offline-message {
+    background-color: #64646E;
+    margin: 5em 5em;
+    padding: 2rem;
+    text-align: center;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 1rem;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+    h3{
+        margin: 0;
+        font-size: 1.5rem;
+    }
 }
 
 footer {
@@ -139,6 +155,26 @@ footer {
 @media only screen and (min-width: 500px) {
     :root {
         font-size: 16px;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .container {
+        flex-direction: row;
+    }
+    .data {
+        width: 50%;
+    }
+
+    input[type=text] {
+        width: 30%;
+    }
+
+    button[type=submit] {
+        width: 10%;
+    }
+    header .identity img {
+        width: 7rem;
     }
 }
 

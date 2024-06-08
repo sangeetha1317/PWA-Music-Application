@@ -9,7 +9,7 @@
   <meta name="description" content="An app to keep a list of songs">
   <meta name="keywords" content="music, songs, playlist">
   <meta name="author" content="Sangeetha Thyagarajan">
-  
+
   <!-- Locks the size of the page on the devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="/css/style.css">
@@ -112,32 +112,18 @@
     <!--Main Content-->
     <main>
       <div class="content">
-        <div class="content-heading"><h2>Add new song</h2></div>
-        <form id="music-add-form">
-          <div class="field">
-            <label for="song-title">Title</label><br>
-            <input type="text" name="Title" id="song-title" placeholder="Enter the title" required/>
-          </div>
-          <div class="field">
-            <label for="song-artist">Artist</label><br>
-            <input type="text" name="Artist" id="song-artist" placeholder="Enter the artist name" maxlength="30" required />
-          </div>
-          <div>
-            <button type="submit" id="add-button">Add</button><br>
-          </div>
-        </form>
-
-        <div class="content-heading"><h2>List of songs</h2></div>
-        <div id="music-list">
+        <div class="offline-message">
+          <h3>No Connection!</h3>
+          <p> Sorry, but this page is not avaliable offline.</p>
         </div>
       </div>
   </div>
   </main>
   <footer>
-     Copyright © 2023. All rights reserved.
-   </footer> 
+    Copyright © 2023. All rights reserved.
+  </footer>
   </div>
-  <script type = "text/javascript" src="script.js"></script>  
+  <script type="text/javascript" src="script.js"></script>
 </body>
 
 </html>

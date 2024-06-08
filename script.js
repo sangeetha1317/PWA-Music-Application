@@ -1,3 +1,26 @@
+
+if('serviceWorker' in navigator) {
+ navigator.serviceWorker.register('/service-worker.js', {scope: '/'})
+ .then((registeration) => {
+    console.log('Register Success:', registeration);
+ })
+ .catch((error) => {
+    console.log('Register Failed', error);
+ });
+} else {
+    console.log('Service Workers are not supported')
+}
+
+//On connection Lost
+window.addEventListener('offline', () => {
+    console.log('You are offline');
+})
+
+//On connection recovered
+window.addEventListener('online', ()=> {
+    console.log('You are online');
+})
+
 const addNewSongForm = document.getElementById('music-add-form');
 const musicList = document.getElementById('music-list');
 const addButton = document.getElementById('add-button');
