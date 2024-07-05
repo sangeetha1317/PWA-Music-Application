@@ -52,8 +52,8 @@ self.addEventListener('activate', function (event) {
 
 //On fetch event: Triggered when service worker retrieves an asset.
 self.addEventListener('fetch', (event) => {
-
-      // Cache strategy: Stale While Revalidate
+    if( event.request.method == 'GET' )  {
+    // Cache strategy: Stale While Revalidate
       event.respondWith(
         caches.open(cacheName)
         .then((cache) => {
@@ -71,6 +71,8 @@ self.addEventListener('fetch', (event) => {
             })
         })
     )
+}
+});
     //Cache Strategy: Cache Only
     // event.respondWith(
     //     caches.open(cacheName)
@@ -113,4 +115,3 @@ self.addEventListener('fetch', (event) => {
     //         })
     // )
 
-});

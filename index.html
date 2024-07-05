@@ -112,16 +112,18 @@
     <!--Main Content-->
     <main>
       <div class="content">
+        <div id="list-output"></div>
         <div class="content-heading"><h2>Add new song</h2></div>
         <form id="music-add-form">
           <div class="field">
             <label for="song-title">Title</label><br>
-            <input type="text" name="Title" id="song-title" placeholder="Enter the title" required/>
+            <input type="text" name="Title" id="song-title" placeholder="Enter the title" />
           </div>
           <div class="field">
             <label for="song-artist">Artist</label><br>
-            <input type="text" name="Artist" id="song-artist" placeholder="Enter the artist name" maxlength="30" required />
+            <input type="text" name="Artist" id="song-artist" placeholder="Enter the artist name" maxlength="30" />
           </div>
+          <div id="message-output"></div>
           <div>
             <button type="submit" id="add-button">Add</button><br>
           </div>
@@ -137,7 +139,27 @@
      Copyright © 2023. All rights reserved.
    </footer> 
   </div>
-  <script type = "text/javascript" src="script.js"></script>  
+  <script type = "module" src="script.js"></script>
+
+  <!-- <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCMvhDKvsWFz4q9YF0eA9FAZB1R12yIkAU",
+      authDomain: "my-pwa-51635.firebaseapp.com",
+      projectId: "my-pwa-51635",
+      storageBucket: "my-pwa-51635.appspot.com",
+      messagingSenderId: "56484736332",
+      appId: "1:56484736332:web:c1f8f57c0abf9836d233e9"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>  -->
 </body>
 
 </html>
