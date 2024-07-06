@@ -152,7 +152,7 @@ main .content {
     padding: 0.1rem;
 }
 
-.offline-message {
+.offline-message, .music-not-found {
     background-color: #64646E;
     margin: 5em 5em;
     padding: 2rem;

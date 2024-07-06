@@ -26,6 +26,8 @@ musicDB.open().then(populateSongs)
     Please, check the connection and try again later.
     </div>`;
         document.getElementById('music-add-form').style.display = 'none';
+        document.getElementsByClassName('content-heading')[0].style.display = 'none';
+        document.getElementsByClassName('content-heading')[1].style.display = 'none';
     })
 
 function addNewSong(e) {
