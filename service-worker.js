@@ -1,4 +1,6 @@
 
+import musicDB from './music-db/music-db.js';
+
 const cacheName = 'cacheAssets';
 // On install event: Triggered when service worker is installed.
 self.addEventListener('install', function (event) {
@@ -73,45 +75,83 @@ self.addEventListener('fetch', (event) => {
     )
 }
 });
-    //Cache Strategy: Cache Only
-    // event.respondWith(
-    //     caches.open(cacheName)
-    //     .then((cache) => {
-    //         return cache.match(event.request)
-    //         .then((response) => {
-    //             return response;
-    //         })
-    //     })
-    // )
-
-    //Cache strategy: Network Only
-    // event.respondWith(
-    //     fetch(event.request)
-    //     .then((response) => {
-    //         return response;
-    //     })
-    // )
 
 
-    //Cache strategy: Cache with Network Fallback 
-    // event.respondWith(
-    //     caches.open(cacheName)
-    //     .then((cache) => {
-    //         return cache.match(event.request)
-    //         .then((response) => {
-    //             return response || fetch(event.request);
-    //         })
-    //     })
-    // )
+self.addEventListener('message', (event) => {
+    console.log('[SW]Message Received', event);
+    const data = event.data;
+    console.log('[SW] Data', data);
 
-    // Cache strategy: Network with Cache Fallback
-    // event.respondWith(
-    //     fetch(event.request)
-    //         .catch(() => {
-    //             return caches.open(cacheName)
-    //                 .then((cache) => {
-    //                     return cache.match(event.request);
-    //                 })
-    //         })
-    // )
+    const who = event.source;
+    who.postMessage(' Thanks')
 
+    const options = { includeUncontrolled: false, type: 'window'}
+    self.clients.matchAll(options).then((matchClients) => {matchClients.forEach((client) =>{
+        if(client.id !== who.id) {
+            client.postMessage('Someone else sent me a message');
+        };
+    })})
+ })
+
+ self.addEventListener('sync', (event) => {
+     switch (event.tag) {
+        case 'my-tag-name':
+            console.log('DO something');
+            break;
+        case 'add-music':
+            addMusic()
+            break;
+        case 'send-email':
+            console.log('Sending email');
+            break;
+     }
+ });
+
+ function addMusic() {
+    musicDB.dbOffline.open()
+    .then(() => {
+    
+        musicDB.dbOffline.getAll()
+        .then((musics) => {
+            musicDB.dbOnline.open()
+            .then(() => {
+                musics.forEach(music => {
+                   musicDB.dbOnline.add(music.songtTitle, music.songArtist)
+                   .then(() => {
+                    musicDB.dbOffline.delete(music.id)
+                   })
+                   .catch((error) => console.log(error))
+                })
+                clients.matchAll().then((clients) => {
+                    clients.forEach((client) => {
+                        client.postMessage({
+                            action: 'music-sync',
+                            count: musics.length
+                        });
+                    });
+                });
+                console.log('ENTERING !!')
+                const message = `Synchronized ${musics.length} music!`
+                self.registration.showNotification(message);
+            })
+            .catch((error) => console.log(error))
+        });
+    })
+    .catch((error) => console.log(error));
+}
+
+self.addEventListener('notificationclick', (event) => {
+    console.log('sangee')
+    const data = event.notification.data;
+    switch(event.action) {
+        case 'confirm': 
+            console.log('Confirmed!');
+            break;
+        case 'cancel': 
+            console.log('Cancelled!');
+            break;
+        default: 
+            console.log('Clicked on the notification!');
+            break;
+    }
+})

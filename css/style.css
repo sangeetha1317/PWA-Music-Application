@@ -80,6 +80,12 @@
     cursor: pointer;
 }
 
+#notificationButton {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+}
+
 input[type=text] {
     width: 40%;
     padding: 10px;
@@ -100,7 +106,6 @@ button[type=submit] {
   border-radius: 8px;
   cursor: pointer;
 }
-
 
 header {
     background: rgb(105,35,110);

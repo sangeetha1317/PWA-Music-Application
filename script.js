@@ -1,13 +1,33 @@
 import musicDB from './music-db/music-db.js';
 
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+    navigator.serviceWorker.register('/service-worker.js', { scope: '/', type: 'module' })
         .then((registeration) => {
             console.log('Register Success:', registeration);
         })
         .catch((error) => {
             console.log('Register Failed', error);
         });
+
+    navigator.serviceWorker.ready
+        .then((registeration) => {
+           const controller = registeration.active;
+
+           const data = {
+            name: 'John',
+            age: 24
+           }
+        //    controller.postMessage(data)
+});
+
+navigator.serviceWorker.addEventListener('message', (event) => {
+    const data = event.data;
+    if (data.action === 'music-sync') {
+        document.getElementById('list-output').innerHTML = `<p>Syncronised ${data.count} music!<p>`
+    }
+})
+
+      
 } else {
     console.log('Service Workers are not supported')
 }
@@ -160,3 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
         addNewSong(e)
     });
 });
+
+
+
