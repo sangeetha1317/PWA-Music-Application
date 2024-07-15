@@ -1,3 +1,5 @@
+import musicDBCloud from "../music-db/music-db-cloud.js";
+
 const notificationButton = document.getElementById('notificationButton');
 if('Notification' in window && 'serviceWorker' in navigator) {
     notificationButton.addEventListener('click', () => {
@@ -7,7 +9,9 @@ if('Notification' in window && 'serviceWorker' in navigator) {
                 requestUserPermission();
                 break;
             case 'granted':
-                displayNotification();
+                // displayNotification();
+                configurePushSubscription();
+
                 break;
             case 'denied':
                 notificationNotAllowed();
@@ -22,7 +26,8 @@ function requestUserPermission() {
     Notification.requestPermission()
     .then((permission) => {
         if(permission === 'granted') {
-            displayNotification();
+            // displayNotification();
+            configurePushSubscription();
         } else {
             notificationNotAllowed();
         }
@@ -44,7 +49,12 @@ function displayNotification() {
                 action: 'cancel',
                 title: 'Cancel'
             }
-        ]
+        ],
+        data: {
+            id: 'he1',
+            name: 'sangeetha',
+            age: 24
+        }
     };
     // new Notification('Successfully subscribed!', options)
     navigator.serviceWorker.ready
@@ -56,4 +66,27 @@ function displayNotification() {
 function notificationNotAllowed() {
     console.log('Notification not allowed');
     notificationButton.disabled = true;
+}
+
+async function configurePushSubscription() {
+    try {
+        const registration = await navigator.serviceWorker.ready;
+        const pushManager = registration.pushManager;
+        let subscription = await pushManager.getSubscription();
+        if( subscription == null ) {
+            const publicKey = 'BBRx89iM8eA3q0XC5HqzR5BjOy8O2tcRbro4ZA1SUwigaLXYld5O05wycy2V8OdwzwtTiWmi6t6zIfWzSRuNlrg'
+            const options = {
+                userVisibleOnly: true,
+                applicationServerKey: publicKey
+            };
+
+            subscription = await pushManager.subscribe(options);
+            await musicDBCloud.open();
+            await musicDBCloud.subscribe(subscription);
+            console.log('Saved subscription')
+        }
+    }
+    catch(error) {
+        console.log('Subscription Error', error)
+    }
 }

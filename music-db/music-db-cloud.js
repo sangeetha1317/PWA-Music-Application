@@ -119,5 +119,25 @@ class MusicDB {
 
         });
     }
+
+    // Saves a push notification subscription
+    subscribe(subscription) {
+        return new Promise((resolve, reject) => {
+            if (!this.isAvailable) {
+                reject('Database not opened!');
+            }
+            //Connects to firebase collection
+            const dbCollection = collection(this.db, 'Subscriptions');
+            addDoc(dbCollection, {
+                subscription: JSON.stringify(subscription)
+            })
+                .then((docRef) => {
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error.message);
+                })
+        });
+    }
 }
 export default new MusicDB();

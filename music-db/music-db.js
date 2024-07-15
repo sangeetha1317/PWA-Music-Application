@@ -15,6 +15,7 @@ class MusicDB {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.ready.then((registration) => {
                     if ('active' in registration && 'sync' in registration) {
+                        console.log('open function atleast')
                         this.dbOffline.open().then(() => {
                             this.swController = registration.active;
                             this.swRegistration = registration;
@@ -35,16 +36,19 @@ class MusicDB {
     }
 
     add(title, artist) {
+        console.log('what is coming ', navigator.onLine)
         if (navigator.onLine) {
             return this.dbOnline.add(title, artist);
         } else {
-            console.log('Offline')
+            console.log('Offline', this.swRegistration)
             this.swRegistration.sync.getTags()
                 .then((tags) => {
+                    console.log('Is there tags',tags)
                     if (!tags.includes('add-music')) {
                         this.swRegistration.sync.register('add-music')
                     }
-                })
+                });
+                console.log('not entering tahs')
             return this.dbOffline.add(title, artist);
         }
     }

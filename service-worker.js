@@ -110,18 +110,24 @@ self.addEventListener('message', (event) => {
  function addMusic() {
     musicDB.dbOffline.open()
     .then(() => {
-    
         musicDB.dbOffline.getAll()
         .then((musics) => {
+            //Open the online database
             musicDB.dbOnline.open()
             .then(() => {
+
+                //Save the musics online
                 musics.forEach(music => {
                    musicDB.dbOnline.add(music.songtTitle, music.songArtist)
                    .then(() => {
+                    console.log('adding music', music)
+
                     musicDB.dbOffline.delete(music.id)
                    })
                    .catch((error) => console.log(error))
                 })
+
+                //Broadcast a message to the user
                 clients.matchAll().then((clients) => {
                     clients.forEach((client) => {
                         client.postMessage({
@@ -130,9 +136,12 @@ self.addEventListener('message', (event) => {
                         });
                     });
                 });
-                console.log('ENTERING !!')
+            
+
+
+                // Also display a notification
                 const message = `Synchronized ${musics.length} music!`
-                self.registration.showNotification(message);
+                registration.showNotification(message);
             })
             .catch((error) => console.log(error))
         });
@@ -141,8 +150,8 @@ self.addEventListener('message', (event) => {
 }
 
 self.addEventListener('notificationclick', (event) => {
-    console.log('sangee')
     const data = event.notification.data;
+    
     switch(event.action) {
         case 'confirm': 
             console.log('Confirmed!');
@@ -152,6 +161,21 @@ self.addEventListener('notificationclick', (event) => {
             break;
         default: 
             console.log('Clicked on the notification!');
+            // const openPromise = clients.openWindow('/')
+            // event.waitUntil(openPromise);
             break;
     }
+})
+
+self.addEventListener('push', (event) => {
+    const data = event.data.json();
+    console.log('Data Content', data);
+
+    const options = {
+        body: data.description,
+        icon: data.icon
+    }
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    )
 })
