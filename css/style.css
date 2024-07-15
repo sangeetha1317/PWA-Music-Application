@@ -21,7 +21,7 @@
     font-family: cursive
 }
 
-#music-add-form {
+#music-add-form, #notification-form {
     padding: 1.5rem;
 }
 
@@ -80,10 +80,16 @@
     cursor: pointer;
 }
 
-#notificationButton {
-    font-size: 1.5rem;
-    margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
+#notification-button {
+    width: 16%;
+    background-color: #69236e;
+    color: white;
+    padding: 15px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 1.2rem;
 }
 
 input[type=text] {
@@ -96,7 +102,7 @@ input[type=text] {
     box-sizing: border-box;
 }
 
-button[type=submit] {
+button[type=submit], #show-button {
   width: 16%;
   background-color: #69236e;
   color: white;

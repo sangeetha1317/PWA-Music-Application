@@ -113,6 +113,22 @@
     <main>
       <div class="content">
         <div id="list-output"></div>
+        <div class="content-heading"><h2>Notification</h2></div>
+        <button id ="notification-button">Subscribe for Notification</button>
+        <form id="notification-form">
+        <div class="field">
+          <label for="notification-title">Title</label><br>
+          <input type="text" name="Title" id="notification-title" placeholder="Enter the title" />
+        </div>
+        <div class="field">
+          <label for="notification-body">Body</label><br>
+          <input type="text" name="Body" id="notification-body" placeholder="Enter the message" maxlength="30" />
+        </div>
+        <div id="notification-output"></div>
+        <div>
+          <button type="submit" id="show-button">Show</button><br>
+        </div>
+       </form>
         <div class="content-heading"><h2>Add new song</h2></div>
         <form id="music-add-form">
           <div class="field">
@@ -128,7 +144,6 @@
             <button type="submit" id="add-button">Add</button><br>
           </div>
         </form>
-        <button id ="notificationButton">Subscribe for Notification</button>
         <div class="content-heading"><h2>List of songs</h2></div>
         <div id="music-list">
         </div>
@@ -140,7 +155,8 @@
    </footer> 
   </div>
   <script type = "module" src="script.js"></script>
-  <script type = "module" src="./js/notification.js"></script>
+  <!-- <script type = "module" src="./js/notification.js"></script> -->
+  <script type = "module" src="./js/notification-form.js"></script>
 
 </body>
 

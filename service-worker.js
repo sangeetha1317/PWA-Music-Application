@@ -153,10 +153,10 @@ self.addEventListener('notificationclick', (event) => {
     const data = event.notification.data;
     
     switch(event.action) {
-        case 'confirm': 
+        case 'Agree': 
             console.log('Confirmed!');
             break;
-        case 'cancel': 
+        case 'Disagree': 
             console.log('Cancelled!');
             break;
         default: 

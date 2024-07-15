@@ -11,23 +11,21 @@ if ('serviceWorker' in navigator) {
 
     navigator.serviceWorker.ready
         .then((registeration) => {
-           const controller = registeration.active;
+            const controller = registeration.active;
 
-           const data = {
-            name: 'John',
-            age: 24
-           }
-        //    controller.postMessage(data)
-});
+            const data = {
+                name: 'John',
+                age: 24
+            }
+            //    controller.postMessage(data)
+        });
 
-navigator.serviceWorker.addEventListener('message', (event) => {
-    const data = event.data;
-    if (data.action === 'music-sync') {
-        document.getElementById('list-output').innerHTML = `<p>Syncronised ${data.count} music!<p>`
-    }
-})
-
-      
+    navigator.serviceWorker.addEventListener('message', (event) => {
+        const data = event.data;
+        if (data.action === 'music-sync') {
+            document.getElementById('list-output').innerHTML = `<p>Syncronised ${data.count} music!<p>`
+        }
+    })
 } else {
     console.log('Service Workers are not supported')
 }
@@ -148,11 +146,11 @@ function displayMusic(music) {
 
         removeBtn.addEventListener('click', () => {
             musicDB.delete(song.id)
-            .then(() => { 
-                elemMusic.remove() 
-            }).catch((err) => { 
-                console.log('Failed to Remove:', err) 
-            });
+                .then(() => {
+                    elemMusic.remove()
+                }).catch((err) => {
+                    console.log('Failed to Remove:', err)
+                });
         })
 
         const likeBtn = document.createElement('button');
@@ -163,11 +161,11 @@ function displayMusic(music) {
         likeBtn.addEventListener('click', () => {
             song.songLike += 1;
             musicDB.update(song)
-            .then(() => { 
-                elemLike.innerText = `Likes: ${song.songLike}` 
-            }).catch((err) => { 
-                console.log('Failed to update:', err) 
-            });
+                .then(() => {
+                    elemLike.innerText = `Likes: ${song.songLike}`
+                }).catch((err) => {
+                    console.log('Failed to update:', err)
+                });
         })
 
         elemMusic.append(elemLikeRemove)
