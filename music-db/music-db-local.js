@@ -8,7 +8,7 @@ class MusicDB {
 
     open() {
         return new Promise((resolve, reject) => {
-            if ('indexedDB' in window) {
+            if (indexedDB) {
                 const request = indexedDB.open('Music', 1)
 
                 //handles error when opening/creating database

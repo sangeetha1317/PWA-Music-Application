@@ -1,4 +1,5 @@
 import musicDB from './music-db/music-db.js';
+const listOutput = document.getElementById('list-output');
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js', { scope: '/', type: 'module' })
@@ -18,12 +19,15 @@ if ('serviceWorker' in navigator) {
                 age: 24
             }
             //    controller.postMessage(data)
-        });
+    });
 
     navigator.serviceWorker.addEventListener('message', (event) => {
         const data = event.data;
         if (data.action === 'music-sync') {
             document.getElementById('list-output').innerHTML = `<p>Syncronised ${data.count} music!<p>`
+        }
+        if( data.action === 'Agree' || data.action === 'Disagree') {
+            document.getElementById('list-output').innerHTML = `${data.message}`
         }
     })
 } else {
@@ -31,9 +35,10 @@ if ('serviceWorker' in navigator) {
 }
 
 const messageOutput = document.getElementById('message-output');
-const listOutput = document.getElementById('list-output');
 const addNewSongForm = document.getElementById('music-add-form');
 const musicList = document.getElementById('music-list');
+const notificationForm = document.getElementById('notification-form');
+const notificationOutput = document.getElementById('notification-output');
 
 musicDB.open().then(populateSongs)
     .catch((err) => {
@@ -173,9 +178,68 @@ function displayMusic(music) {
     })
 }
 
+function showNotification(e) {
+    e.preventDefault();
+    let message = []
+    const notificationTitleInput = document.getElementById("notification-title");
+    const notificationBodyInput = document.getElementById("notification-body");
+
+    // Validation checks
+    const notificationTitle = notificationTitleInput.value.trim();
+    const notificationBody = notificationBodyInput.value.trim();
+
+    if (notificationTitle === '' || notificationBody === '') {
+        message.push('Title and Body fields are required.')
+    }
+
+    if (message.length === 0) {
+        notificationOutput.innerHTML = `
+        <div class='music-add-success'>
+            Notification added successfully!
+        </div>`;
+        displayNotification(notificationTitle, notificationBody);
+        notificationTitleInput.value = '';
+        notificationBodyInput.value = '';
+    } else {
+
+        const description = message.join('<br>');
+        notificationOutput.innerHTML = `
+        <div class='validation-error'>
+            <span>${description}</span>
+        </div>`;
+    }
+}
+
+function displayNotification(title, body) {
+    const options = {
+        body: body,
+        icon: '/images/logo.png',
+        actions: [
+            {
+                action:'Agree',
+                title: 'Agree'
+            },
+            {
+                action: 'Disagree',
+                title: 'Disagree'
+            }
+        ]
+    };
+    navigator.serviceWorker.ready
+    .then((registration) => {
+        registration.showNotification(title, options)
+    })
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     addNewSongForm.addEventListener("submit", function (e) {
         addNewSong(e)
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    notificationForm.addEventListener("submit", function (e) {
+        showNotification(e)
     });
 });
 

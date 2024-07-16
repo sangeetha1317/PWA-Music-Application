@@ -94,12 +94,14 @@ self.addEventListener('message', (event) => {
  })
 
  self.addEventListener('sync', (event) => {
+    console.log('[SW] Bg Sync:', event);
      switch (event.tag) {
         case 'my-tag-name':
             console.log('DO something');
             break;
         case 'add-music':
-            addMusic()
+            console.log('addMusics')
+            addMusic();
             break;
         case 'send-email':
             console.log('Sending email');
@@ -118,10 +120,8 @@ self.addEventListener('message', (event) => {
 
                 //Save the musics online
                 musics.forEach(music => {
-                   musicDB.dbOnline.add(music.songtTitle, music.songArtist)
+                   musicDB.dbOnline.add(music.songTitle, music.songArtist)
                    .then(() => {
-                    console.log('adding music', music)
-
                     musicDB.dbOffline.delete(music.id)
                    })
                    .catch((error) => console.log(error))
@@ -150,21 +150,26 @@ self.addEventListener('message', (event) => {
 }
 
 self.addEventListener('notificationclick', (event) => {
-    const data = event.notification.data;
-    
+    let data = " ";
     switch(event.action) {
         case 'Agree': 
-            console.log('Confirmed!');
+            data = "So we both agree on that!"
             break;
         case 'Disagree': 
-            console.log('Cancelled!');
+            data = "Let's agree to disagree. "
             break;
         default: 
             console.log('Clicked on the notification!');
-            // const openPromise = clients.openWindow('/')
-            // event.waitUntil(openPromise);
             break;
     }
+    clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+            client.postMessage({
+                action: event.action,
+                message: data 
+            });
+        });
+    });
 })
 
 self.addEventListener('push', (event) => {

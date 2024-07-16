@@ -1,6 +1,6 @@
 import musicDBCloud from "../music-db/music-db-cloud.js";
 
-const notificationButton = document.getElementById('notificationButton');
+const notificationButton = document.getElementById('notification-button');
 if('Notification' in window && 'serviceWorker' in navigator) {
     notificationButton.addEventListener('click', () => {
         console.log('Permission', Notification.permission)
@@ -9,9 +9,7 @@ if('Notification' in window && 'serviceWorker' in navigator) {
                 requestUserPermission();
                 break;
             case 'granted':
-                // displayNotification();
                 configurePushSubscription();
-
                 break;
             case 'denied':
                 notificationNotAllowed();
