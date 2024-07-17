@@ -26,6 +26,11 @@
     padding: 1.5rem;
 }
 
+#notification-button.disabled {
+    background-color:#64646E;
+    color:#ccc
+}
+
 #music-list {
     margin-bottom: 5rem;
 }

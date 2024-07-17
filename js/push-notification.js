@@ -29,7 +29,11 @@ function checkForSubscription() {
         notificationButton.style.display = 'none';
     } else {
         notificationForm.style.display = 'none';
-        notificationButton.style.display = 'content';
+        notificationButton.style.display = 'block';
+        if(Notification.permission == 'denied') {
+            notificationButton.disabled = true;
+            notificationButton.classList.add('disabled');
+        }
     }
 }
 
@@ -49,6 +53,7 @@ function requestUserPermission() {
 function notificationNotAllowed() {
     console.log('Notification not allowed');
     notificationButton.disabled = true;
+    notificationButton.classList.add('disabled');
 }
 
 async function configurePushSubscription() {
