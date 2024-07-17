@@ -1,7 +1,6 @@
 import musicDBCloud from "../music-db/music-db-cloud.js";
 
 const notificationButton = document.getElementById('notification-button');
-const showButton = document.getElementById('show-button');
 const notificationForm = document.getElementById('notification-form');
 
 if ('Notification' in window && 'serviceWorker' in navigator) {
@@ -57,7 +56,6 @@ async function configurePushSubscription() {
         const registration = await navigator.serviceWorker.ready;
         const pushManager = registration.pushManager;
         let subscription = await pushManager.getSubscription();
-        console.log('subs', subscription)
         if (subscription == null) {
             const publicKey = 'BBRx89iM8eA3q0XC5HqzR5BjOy8O2tcRbro4ZA1SUwigaLXYld5O05wycy2V8OdwzwtTiWmi6t6zIfWzSRuNlrg'
             const options = {

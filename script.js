@@ -18,16 +18,18 @@ if ('serviceWorker' in navigator) {
                 name: 'John',
                 age: 24
             }
-            //    controller.postMessage(data)
-    });
+            // controller.postMessage(data)
+        });
 
     navigator.serviceWorker.addEventListener('message', (event) => {
         const data = event.data;
         if (data.action === 'music-sync') {
             document.getElementById('list-output').innerHTML = `<p>Syncronised ${data.count} music!<p>`
-        }
-        if( data.action === 'Agree' || data.action === 'Disagree') {
+        } else if (data.action === 'Agree' || data.action === 'Disagree') {
+            document.getElementById('list-output').style.display = "flex";
             document.getElementById('list-output').innerHTML = `${data.message}`
+        } else {
+            document.getElementById('list-output').style.display = "none";
         }
     })
 } else {
@@ -39,6 +41,7 @@ const addNewSongForm = document.getElementById('music-add-form');
 const musicList = document.getElementById('music-list');
 const notificationForm = document.getElementById('notification-form');
 const notificationOutput = document.getElementById('notification-output');
+document.getElementById('list-output').style.display = "none";
 
 musicDB.open().then(populateSongs)
     .catch((err) => {
@@ -115,7 +118,7 @@ function populateSongs() {
 }
 
 function displayMusic(music) {
-    musicList.innerHTML = '';
+    // musicList.innerHTML = '';
     music.forEach((song) => {
         const elemMusic = document.createElement('div');
         elemMusic.className = 'song-item';
@@ -188,8 +191,8 @@ function showNotification(e) {
     const notificationTitle = notificationTitleInput.value.trim();
     const notificationBody = notificationBodyInput.value.trim();
 
-    if (notificationTitle === '' || notificationBody === '') {
-        message.push('Title and Body fields are required.')
+    if (notificationTitle === '') {
+        message.push('Title field is required for the notification.')
     }
 
     if (message.length === 0) {
@@ -212,11 +215,12 @@ function showNotification(e) {
 
 function displayNotification(title, body) {
     const options = {
-        body: body,
+        body,
         icon: '/images/logo.png',
+        image: '/images/pushnotification.png',
         actions: [
             {
-                action:'Agree',
+                action: 'Agree',
                 title: 'Agree'
             },
             {
@@ -226,16 +230,16 @@ function displayNotification(title, body) {
         ]
     };
     navigator.serviceWorker.ready
-    .then((registration) => {
-        registration.showNotification(title, options)
-    })
+        .then((registration) => {
+            registration.showNotification(title, options)
+        })
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    addNewSongForm.addEventListener("submit", function (e) {
-        addNewSong(e)
-    });
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//     addNewSongForm.addEventListener("submit", function (e) {
+//         addNewSong(e)
+//     });
+// });
 
 document.addEventListener("DOMContentLoaded", function () {
     notificationForm.addEventListener("submit", function (e) {

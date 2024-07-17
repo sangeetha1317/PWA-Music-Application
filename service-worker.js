@@ -54,48 +54,47 @@ self.addEventListener('activate', function (event) {
 
 //On fetch event: Triggered when service worker retrieves an asset.
 self.addEventListener('fetch', (event) => {
-    if( event.request.method == 'GET' )  {
-    // Cache strategy: Stale While Revalidate
-      event.respondWith(
-        caches.open(cacheName)
-        .then((cache) => {
-            return cache.match(event.request)
-            .then((cachedResponse) => {
-                const fetchedResponse = fetch(event.request)
-                .then((networkResponse) => {
-                    cache.put(event.request, networkResponse.clone());
-                    return networkResponse;
+    if (event.request.method == 'GET') {
+        // Cache strategy: Stale While Revalidate
+        event.respondWith(
+            caches.open(cacheName)
+                .then((cache) => {
+                    return cache.match(event.request)
+                        .then((cachedResponse) => {
+                            const fetchedResponse = fetch(event.request)
+                                .then((networkResponse) => {
+                                    cache.put(event.request, networkResponse.clone());
+                                    return networkResponse;
+                                })
+                                .catch(() => {
+                                    return cache.match('/offline.html');
+                                });
+                            return cachedResponse || fetchedResponse;
+                        })
                 })
-                .catch(() => {
-                    return cache.match('/offline.html');
-                });
-                return cachedResponse || fetchedResponse;
-            })
-        })
-    )
-}
+        )
+    }
 });
 
 
 self.addEventListener('message', (event) => {
     console.log('[SW]Message Received', event);
     const data = event.data;
-    console.log('[SW] Data', data);
+    const whoAmI = event.source;
+    whoAmI.postMessage('Thanks')
 
-    const who = event.source;
-    who.postMessage(' Thanks')
+    const options = { includeUncontrolled: false, type: 'window' }
+    self.clients.matchAll(options).then((matchClients) => {
+        matchClients.forEach((client) => {
+            if (client.id !== who.id) {
+                client.postMessage('Someone else sent me a message');
+            };
+        })
+    })
+})
 
-    const options = { includeUncontrolled: false, type: 'window'}
-    self.clients.matchAll(options).then((matchClients) => {matchClients.forEach((client) =>{
-        if(client.id !== who.id) {
-            client.postMessage('Someone else sent me a message');
-        };
-    })})
- })
-
- self.addEventListener('sync', (event) => {
-    console.log('[SW] Bg Sync:', event);
-     switch (event.tag) {
+self.addEventListener('sync', (event) => {
+    switch (event.tag) {
         case 'my-tag-name':
             console.log('DO something');
             break;
@@ -106,59 +105,59 @@ self.addEventListener('message', (event) => {
         case 'send-email':
             console.log('Sending email');
             break;
-     }
- });
+    }
+});
 
- function addMusic() {
+function addMusic() {
     musicDB.dbOffline.open()
-    .then(() => {
-        musicDB.dbOffline.getAll()
-        .then((musics) => {
-            //Open the online database
-            musicDB.dbOnline.open()
-            .then(() => {
+        .then(() => {
+            musicDB.dbOffline.getAll()
+                .then((musics) => {
+                    //Open the online database
+                    musicDB.dbOnline.open()
+                        .then(() => {
 
-                //Save the musics online
-                musics.forEach(music => {
-                   musicDB.dbOnline.add(music.songTitle, music.songArtist)
-                   .then(() => {
-                    musicDB.dbOffline.delete(music.id)
-                   })
-                   .catch((error) => console.log(error))
-                })
+                            //Save the musics online
+                            musics.forEach(music => {
+                                musicDB.dbOnline.add(music.songTitle, music.songArtist)
+                                    .then(() => {
+                                        musicDB.dbOffline.delete(music.id)
+                                    })
+                                    .catch((error) => console.log(error))
+                            })
 
-                //Broadcast a message to the user
-                clients.matchAll().then((clients) => {
-                    clients.forEach((client) => {
-                        client.postMessage({
-                            action: 'music-sync',
-                            count: musics.length
-                        });
-                    });
+                            //Broadcast a message to the user
+                            clients.matchAll().then((clients) => {
+                                clients.forEach((client) => {
+                                    client.postMessage({
+                                        action: 'music-sync',
+                                        count: musics.length
+                                    });
+                                });
+                            });
+
+
+
+                            // Also display a notification
+                            const message = `Synchronized ${musics.length} music!`
+                            registration.showNotification(message);
+                        })
+                        .catch((error) => console.log(error))
                 });
-            
-
-
-                // Also display a notification
-                const message = `Synchronized ${musics.length} music!`
-                registration.showNotification(message);
-            })
-            .catch((error) => console.log(error))
-        });
-    })
-    .catch((error) => console.log(error));
+        })
+        .catch((error) => console.log(error));
 }
 
 self.addEventListener('notificationclick', (event) => {
     let data = " ";
-    switch(event.action) {
-        case 'Agree': 
+    switch (event.action) {
+        case 'Agree':
             data = "So we both agree on that!"
             break;
-        case 'Disagree': 
+        case 'Disagree':
             data = "Let's agree to disagree. "
             break;
-        default: 
+        default:
             console.log('Clicked on the notification!');
             break;
     }
@@ -166,7 +165,7 @@ self.addEventListener('notificationclick', (event) => {
         clients.forEach((client) => {
             client.postMessage({
                 action: event.action,
-                message: data 
+                message: data
             });
         });
     });

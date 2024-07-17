@@ -62,11 +62,21 @@ class MusicDB {
     }
 
     update(updatedsong) {
-
+        if( navigator.onLine) {
+            return this.dbOnline.update(updatedsong)
+        } else {
+            // Sync in order to see changes after coming online
+            return this.dbOffline.update(updatedsong)
+        }
     }
 
     delete(id) {
-        return this.dbOffline.delete(id)
+        if( navigator.onLine) {
+            return this.dbOnline.delete(id)
+        } else {
+             // Sync in order to see changes after coming online
+            return this.dbOffline.delete(id)
+        }
     }
 }
 export default new MusicDB();
